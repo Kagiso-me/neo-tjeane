@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo Tjeane — Project Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0f0f0f;
+      --mid:       #555;
+      --muted:     #888;
+      --rule:      #e4e4e4;
+      --accent:    #1a1a2e;
+      --highlight: #d4af7a;
+      --bg:        #fafaf8;
+      --card:      #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ──────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(26,26,46,.96);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-logo span { color: var(--highlight); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.6);
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    .nav-links a:hover { color: var(--highlight); }
+
+    /* ── HERO ─────────────────────────────────── */
+    .hero {
+      background: var(--accent);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,122,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,122,.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--highlight);
+      margin-bottom: 16px;
+    }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 4rem;
+      color: #fff;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      display: inline-block;
+      background: var(--highlight);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.7);
+      line-height: 1.75;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--highlight);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+
+    .hero-cta:hover { opacity: .85; }
+
+    /* Stats panel */
+    .stats-panel {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .stat-item:last-child { border-bottom: none; }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 8px;
+    }
+
+    .stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.2rem;
+      line-height: 1;
+      color: var(--highlight);
+    }
+
+    /* ── SECTIONS SHARED ──────────────────────── */
+    section {
+      padding: 96px 48px;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--highlight);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      color: var(--ink);
+      margin-bottom: 48px;
+      line-height: 1.1;
+    }
+
+    /* ── FEATURED PROJECT (Mercedes) ─────────── */
+    #work { background: var(--accent); }
+
+    #work .section-title { color: #fff; }
+    #work .section-label { color: var(--highlight); }
+
+    .featured-hero {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 48px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle at top right, rgba(212,175,122,.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--highlight);
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .featured-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .featured-campaign {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--highlight);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .featured-desc {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,.65);
+      line-height: 1.75;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    .featured-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ftag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.5);
+      border: 1px solid rgba(255,255,255,.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* Campaign grid */
+    .campaign-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .campaign-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 6px;
+      padding: 24px;
+      transition: border-color .2s;
+    }
+
+    .campaign-card:hover {
+      border-color: rgba(212,175,122,.4);
+    }
+
+    .cc-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .cc-role {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--highlight);
+      margin-bottom: 10px;
+    }
+
+    .cc-desc {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.6;
+    }
+
+    /* ── ABOUT ────────────────────────────────── */
+    #about { background: var(--card); }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .pillar {
+      padding: 28px 24px;
+      background: var(--bg);
+      border-radius: 6px;
+      border-top: 3px solid var(--highlight);
+    }
+
+    .pillar-icon {
+      color: var(--highlight);
+      margin-bottom: 14px;
+    }
+
+    .pillar-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .pillar-body {
+      font-size: 0.84rem;
+      color: var(--mid);
+      line-height: 1.65;
+    }
+
+    /* ── CONTACT ──────────────────────────────── */
+    #contact {
+      background: var(--bg);
+      border-top: 1px solid var(--rule);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 560px;
+    }
+
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      text-decoration: none;
+      transition: border-color .15s;
+    }
+
+    .contact-card:hover { border-color: var(--highlight); }
+
+    .contact-card-icon {
+      color: var(--highlight);
+      flex-shrink: 0;
+    }
+
+    .contact-card-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .contact-card-value {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ── FOOTER ───────────────────────────────── */
+    footer {
+      background: var(--accent);
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,.4);
+    }
+
+    footer .logo span { color: var(--highlight); }
+
+    footer p {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,.3);
+    }
+
+    /* ── RESPONSIVE ───────────────────────────── */
+    @media (max-width: 800px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 64px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-name { font-size: 2.8rem; }
+      .stats-panel { flex-direction: row; flex-wrap: wrap; }
+      .stat-item { flex: 1; min-width: 140px; border-bottom: none; border-right: 1px solid rgba(255,255,255,.07); }
+      .stat-item:last-child { border-right: none; }
+      section { padding: 64px 24px; }
+      .pillars { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Neo <span>Tjeane</span></div>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">Project Manager · Johannesburg</div>
+        <div class="hero-name">Neo<br>Tjeane</div>
+        <div class="hero-title">10+ Years Experience</div>
+        <p class="hero-bio">
+          Delivering integrated advertising, digital media production, and experiential campaigns
+          for some of the world's most demanding brands — end-to-end, on time, within budget.
+        </p>
+        <a href="#contact" class="hero-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Get in touch
+        </a>
+      </div>
+      <div class="stats-panel">
+        <div class="stat-item">
+          <div class="stat-label">Years of Experience</div>
+          <div class="stat-number">10+</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Brands Worked With</div>
+          <div class="stat-number">20+</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Campaigns Delivered</div>
+          <div class="stat-number">50+</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-inner">
+      <div class="section-label">Selected Work</div>
+      <div class="section-title">Campaigns that moved the needle</div>
+
+      <!-- Mercedes Hero -->
+      <div class="featured-hero">
+        <div class="featured-badge">
+          ★ Flagship Project
+        </div>
+        <div class="featured-brand">Mercedes-Benz</div>
+        <div class="featured-campaign">"Unrivalled" — Automotive Production</div>
+        <p class="featured-desc">
+          End-to-end production management for a high-end automotive campaign built around showcasing vehicle performance at its peak.
+          Sourced and managed all key production talent — director, DOP, videographer, and post-production teams — while coordinating
+          schedules and logistics to deliver a cohesive, premium output that met the exacting Mercedes-Benz brand standard without compromise.
+        </p>
+        <div class="featured-tags">
+          <span class="ftag">End-to-end Production</span>
+          <span class="ftag">Talent & Crew Sourcing</span>
+          <span class="ftag">Post-production Oversight</span>
+          <span class="ftag">Automotive</span>
+          <span class="ftag">Prodigious SA</span>
+        </div>
+      </div>
+
+      <!-- Campaign Grid -->
+      <div class="campaign-grid">
+        <div class="campaign-card">
+          <div class="cc-brand">Citroën (Stellantis)</div>
+          <div class="cc-role">11-Month Nationwide Campaign</div>
+          <div class="cc-desc">Large-scale experiential rollout across in-store, mall, and university touchpoints. Managed logistics, regional promoter sourcing, and stakeholder coordination across multiple locations simultaneously.</div>
+        </div>
+        <div class="campaign-card">
+          <div class="cc-brand">Maggi Noodles — Nestlé</div>
+          <div class="cc-role">Experiential Activation</div>
+          <div class="cc-desc">Nationwide in-store and mall campaign delivering consistent brand experience across all touchpoints. Oversaw stock distribution, equipment movement, and scheduling.</div>
+        </div>
+        <div class="campaign-card">
+          <div class="cc-brand">BYD &amp; Honor</div>
+          <div class="cc-role">Brand Activations</div>
+          <div class="cc-desc">Managed experiential campaigns for two fast-growing global brands entering the South African market — ensuring brand-aligned execution and operational excellence at every touchpoint.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-label">About</div>
+      <div class="section-title">How I work</div>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="pillar-title">Vendor Networks &amp; Procurement</div>
+          <div class="pillar-body">Built high-performing supplier networks through strategic procurement and sharp contract negotiations — delivering solutions that honour both creative ambition and commercial reality.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="pillar-title">Cross-functional Leadership</div>
+          <div class="pillar-body">Experienced working across creative, digital, production, and client service teams — bridging the gap between strategy and execution so nothing gets lost in translation.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="pillar-title">Efficiency Under Pressure</div>
+          <div class="pillar-body">Thrives in fast-paced environments, solving complex challenges by finding smarter, leaner ways to deliver — without sacrificing quality or impact.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner">
+      <div class="section-label">Contact</div>
+      <div class="section-title">Let's work together</div>
+      <div class="contact-grid">
+        <a href="tel:0818806123" class="contact-card">
+          <div class="contact-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-card-label">Phone</div>
+            <div class="contact-card-value">081 880 6123</div>
+          </div>
+        </a>
+        <a href="mailto:hlapolosaneo4@gmail.com" class="contact-card">
+          <div class="contact-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-card-label">Email</div>
+            <div class="contact-card-value">hlapolosaneo4@gmail.com</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">Neo <span>Tjeane</span></div>
+    <p>Project Manager · Johannesburg</p>
+  </footer>
+
+</body>
+</html>
